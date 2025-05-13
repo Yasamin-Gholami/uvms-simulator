@@ -720,7 +720,7 @@ def launch_setup(context, *args, **kwargs):
 
     mode = OpaqueFunction(function=lambda context: [])
 
-    if task in ['interactive','manual', 'coverage', 'dof_control']:
+    if task in ['interactive','manual', 'coverage', 'dof_control', 'move', 'move2']:
         try:
             _ = FindPackageShare("simlab").find("simlab")
             simlab_exists = True
@@ -769,6 +769,32 @@ def launch_setup(context, *args, **kwargs):
                     }]
                 )
                 mode = coverage_node
+            elif task == 'move':
+                move_node = Node(
+                    package='simlab',
+                    executable='move_node',
+                    parameters=[{
+                        'robots_prefix': robot_prefixes,
+                        'no_robot': len(robot_prefixes),
+                        'no_efforts': len(dof_efforts),
+                        'record_data': record_data_bool,
+                        'controllers': controllers
+                    }]
+                )
+                mode = move_node
+            elif task == 'move2':
+                move2_node = Node(
+                    package='simlab',
+                    executable='move2_node',
+                    parameters=[{
+                        'robots_prefix': robot_prefixes,
+                        'no_robot': len(robot_prefixes),
+                        'no_efforts': len(dof_efforts),
+                        'record_data': record_data_bool,
+                        'controllers': controllers
+                    }]
+                )
+                mode = move2_node
             elif task == 'dof_control':
                 dof_control_node = Node(
                     package='simlab',
@@ -786,7 +812,8 @@ def launch_setup(context, *args, **kwargs):
             raise Exception("""uvms simlab package not found. If you intend to run
                             the coverage example, interactive marker mode or manual control via PS4 joystick,
                             please install uvms_simlab from https://github.com/edxmorgan/uvms_simlab""")
-
+    else:    
+        raise Exception("""\033[1mTask not available\033[0m""")
 
     thruster_forward_pwm_spawner = Node(
         package="controller_manager",
