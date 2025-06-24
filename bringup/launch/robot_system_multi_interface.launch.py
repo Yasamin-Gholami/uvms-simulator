@@ -812,8 +812,10 @@ def launch_setup(context, *args, **kwargs):
             raise Exception("""uvms simlab package not found. If you intend to run
                             the coverage example, interactive marker mode or manual control via PS4 joystick,
                             please install uvms_simlab from https://github.com/edxmorgan/uvms_simlab""")
+
     else:    
         raise Exception("""\033[1mTask not available\033[0m""")
+
 
     thruster_forward_pwm_spawner = Node(
         package="controller_manager",
@@ -828,6 +830,18 @@ def launch_setup(context, *args, **kwargs):
         ),
     )
 
+    # param_updater_node = Node(
+    #         package='simlab',
+    #         executable='param_updater_node',
+    #         name='param_updater_node',
+    #         parameters=[{
+    #             'robots_prefix': robot_prefixes,
+    #             'no_robot': len(robot_prefixes),
+    #             'no_efforts': len(dof_efforts),
+    #             'record_data': record_data_bool
+    #         }]
+    #     )
+    
   # Define the simulator actions
     simulator_actions = [
         joint_state_broadcaster_spawner, #important
@@ -837,7 +851,7 @@ def launch_setup(context, *args, **kwargs):
         mode,
         run_plotjuggler,
         robot_state_pub_node,
-        delay_rviz_after_fts_broadcaster_spawner,
+        delay_rviz_after_fts_broadcaster_spawner
     ]
  
     # Define simulator_agent
